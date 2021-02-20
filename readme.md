@@ -1,5 +1,6 @@
 # Steam Game Color Palette
 ## Description
+
 This is a utility I built for a friend who was researching color palettes for a game he was developing. Some indy games go with a very specific artistic motif to brand the game or at least to stand out. This tool will download and analyze the screenshots from a game on Steam using OpenCV and SciKit Learn. The basic process flow is:
 
 1. Check if the game already has screenshots on the local machine. If not, create a directory and download all the game's screenhots.
@@ -9,7 +10,11 @@ This is a utility I built for a friend who was researching color palettes for a 
 
 ## Example
 
+Given this starting bank of screenshots:
+![Starting Screenshots](https://github.com/SeanDrum/game-color-palette/blob/master/starting-screenshots.png)
 
+Default settings will result in this palette being produced:
+![Resulting Palette](https://github.com/SeanDrum/game-color-palette/blob/master/palette-example.PNG?raw=true)
 
 ## Use 
 
