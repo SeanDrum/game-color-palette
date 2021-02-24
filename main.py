@@ -19,22 +19,19 @@ def centroid_histogram(clt):
 	return hist
 
 
+
 def plot_colors(hist, centroids):
-	# initialize the bar chart representing the relative frequency
-	# of each of the colors
 	bar = np.zeros((50, 300, 3), dtype = "uint8")
 	startX = 0
-	# loop over the percentage of each cluster and the color of
-	# each cluster
+
 	for (percent, color) in zip(hist, centroids):
-		# plot the relative percentage of each cluster
 		endX = startX + (percent * 300)
 		cv.rectangle(bar, (int(startX), 0), (int(endX), 50),
 			color.astype("uint8").tolist(), -1)
 		startX = endX
 	
-	# return the bar chart
 	return bar
+
 
 
 def DownloadImages(gameImages, gameDirectory):
@@ -52,21 +49,20 @@ def DownloadImages(gameImages, gameDirectory):
     print('Images Downloaded')
 
 
-def ResizeImage(image):
-    scale_percent = 20 # percent of original size
 
-    width = int(image.shape[1] * scale_percent / 100)
-    height = int(image.shape[0] * scale_percent / 100)
+def ResizeImage(image, imageScale):
+
+    width = int(image.shape[1] * imageScale / 100)
+    height = int(image.shape[0] * imageScale / 100)
     dim = (width, height)
   
-    # resize image
     resized = cv.resize(image, dim, interpolation = cv.INTER_AREA)
 
     return resized
 
 
 
-def main(gameId):
+def DownloadImages(gameId):
     gameId = str(gameId)
     requestResponse = requests.get('https://store.steampowered.com/api/appdetails?appids=' +  gameId)
 
@@ -96,29 +92,40 @@ def main(gameId):
         else:
             print('Images already present, skipping download.')
     
+    return gameDirectory
+
+
+
+def main(gameId, numClusters, imageScale = 20): 
+    
+    gameDirectory = DownloadImages(gameId)
+
     vectorOfImages = []
 
     for img in os.scandir(gameDirectory):
         if (img.path.endswith('.jpg')):
             imageOriginal = cv.imread(img.path)
             image = cv.cvtColor(imageOriginal, cv.COLOR_BGR2RGB)
-            image = ResizeImage(image)
+            image = ResizeImage(image, imageScale)
             image = image.reshape((image.shape[0] * image.shape[1], 3))
             vectorOfImages.extend(image)
 
-    clt = KMeans(n_clusters = 5)
-    clt.fit(vectorOfImages)
+    kMeansCluster = KMeans(n_clusters = numClusters)
+    kMeansCluster.fit(vectorOfImages)
 
-    # build a histogram of clusters and then create a figure
-    # representing the number of pixels labeled to each color
-    hist = centroid_histogram(clt)
-    bar = plot_colors(hist, clt.cluster_centers_)
+    hist = centroid_histogram(kMeansCluster)
+    bar = plot_colors(hist, kMeansCluster.cluster_centers_)
 
-    # show our color bar
     plt.figure()
     plt.axis("off")
     plt.imshow(bar)
     plt.show()
 
+
+
 if __name__ == "__main__":
-    main(1079800)
+    gameId = 1079800
+    numClusters = 10
+    imageScale = 20 #percentage scale to reduce the image to
+
+    main(gameId, numClusters, imageScale)

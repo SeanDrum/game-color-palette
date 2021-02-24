@@ -8,6 +8,8 @@ This is a utility I built for a friend who was researching color palettes for a 
 3. Convert the images into a vector space of their colors.
 4. Use a K-Means clustering algorithm to find the 5 most common color areas *generally speaking*. While the tool will produce exact hex values, really it's looking at colors that are in clusters to give you the general idea of how the game is styled. 
 
+The k-means clustering and bits that display the palette are largely copied from Adrian Rosebrocks fantastic work on [PyImageSearch.com](https://www.pyimagesearch.com/2014/05/26/opencv-python-k-means-color-clustering/).
+
 ## Example
 
 Given this starting bank of screenshots:
